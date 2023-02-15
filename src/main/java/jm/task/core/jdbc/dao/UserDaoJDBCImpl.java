@@ -13,7 +13,6 @@ public class UserDaoJDBCImpl implements UserDao {
     private final String USER = "root";
     private final String PASSWORD = "root";
     private final String tableName = "users";
-    private final Connection connection = Util.getConnection(URL, USER, PASSWORD);
 
     public UserDaoJDBCImpl() {
 
@@ -28,7 +27,9 @@ public class UserDaoJDBCImpl implements UserDao {
                         " primary key (id)" +
                         ") engine = InnoDB default charset = utf8mb4 collate = utf8mb4_0900_ai_ci",
                 tableName);
-        try (Statement statement = connection.createStatement()) {
+
+        try (Connection connection = Util.getConnection(URL, USER, PASSWORD);
+             Statement statement = connection.createStatement()) {
             statement.execute(query);
             System.out.println("Таблица успешно создана");
         } catch (SQLException e) {
@@ -42,7 +43,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() {
         String query = String.format("drop table task_1_1_4.%s", tableName);
-        try (Statement statement = connection.createStatement()) {
+        try (Connection connection = Util.getConnection(URL, USER, PASSWORD);
+             Statement statement = connection.createStatement()) {
             statement.execute(query);
             System.out.println("Таблица успешно удалена");
         } catch (SQLException e) {
@@ -57,7 +59,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         String query = String.format("insert into task_1_1_4.%s (name, lastName, age) values (?, ?, ?)", tableName);
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = Util.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
@@ -75,7 +78,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public void removeUserById(long id) {
         String query = String.format("delete from task_1_1_4.%s WHERE (id = ?)", tableName);
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = Util.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
             System.out.printf((preparedStatement.executeUpdate() != 0 ? "User с id – %s удален из базы данных.\n" : "User с id – %s отсутствует в базе данных.\n"), id);
         } catch (SQLException e) {
@@ -91,7 +95,8 @@ public class UserDaoJDBCImpl implements UserDao {
         ResultSet resultSet;
         List<User> users = new ArrayList<>();
         String query = String.format("select * from task_1_1_4.%s", tableName);
-        try (Statement statement = connection.createStatement()) {
+        try (Connection connection = Util.getConnection(URL, USER, PASSWORD);
+             Statement statement = connection.createStatement()) {
             resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
                 long id = resultSet.getLong("id");
@@ -113,7 +118,9 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() {
         String query = String.format("delete from task_1_1_4.%s", tableName);
-        try (Statement statement = connection.createStatement()) {
+
+        try (Connection connection = Util.getConnection(URL, USER, PASSWORD);
+             Statement statement = connection.createStatement()) {
             statement.execute(query);
             System.out.println("Таблица пользователей очищена");
         } catch (SQLException e) {
@@ -124,4 +131,5 @@ public class UserDaoJDBCImpl implements UserDao {
             }
         }
     }
+
 }

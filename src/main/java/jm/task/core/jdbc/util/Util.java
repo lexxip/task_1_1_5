@@ -1,18 +1,15 @@
 package jm.task.core.jdbc.util;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
-//    public static Connection connection;
+
+    private Util() {}
 
     public static Connection getConnection(String url, String user, String password) {
         Connection connection = null;
-//        if (connection != null) {
-//            return connection;
-//        }
 
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -21,7 +18,7 @@ public class Util {
             System.err.println("Не удалось установить соединение с базой данных");
             System.exit(0);
         }
-
         return connection;
     }
+
 }
