@@ -10,15 +10,19 @@ import java.util.Properties;
 
 public class Util {
 
-    private static SessionFactory hibernateConnection;
+    private static final String URL = "jdbc:mysql://localhost:3306/task_1_1_4";
+    private static final String USER = "root";
+    private static final String PASSWORD = "root";
+    private static SessionFactory sessionFactory;
 
     private Util() {}
 
-    public static Connection getConnection(String url, String user, String password) {
+    public static Connection getConnection() {
+
         Connection connection = null;
 
         try {
-            connection = DriverManager.getConnection(url, user, password);
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
             System.err.println("Не удалось установить соединение с базой данных");
@@ -28,8 +32,8 @@ public class Util {
     }
 
     public static SessionFactory getHibernateConnection() {
-        if (hibernateConnection != null) {
-            return hibernateConnection;
+        if (sessionFactory != null) {
+            return sessionFactory;
         }
 
         Properties properties = new Properties();
@@ -40,7 +44,7 @@ public class Util {
         properties.setProperty("hibernate.connection.password", "root");
 
         try {
-            hibernateConnection = new Configuration()
+            sessionFactory = new Configuration()
                     .setProperties(properties)
                     .addAnnotatedClass(User.class)
                     .buildSessionFactory();
@@ -49,7 +53,7 @@ public class Util {
             System.err.println("Не удалось установить соединение с базой данных");
             System.exit(0);
         }
-        return hibernateConnection;
+        return sessionFactory;
     }
 
 }
