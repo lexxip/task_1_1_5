@@ -2,7 +2,6 @@ package jm.task.core.jdbc.util;
 
 import jm.task.core.jdbc.model.User;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,24 +32,18 @@ public class Util {
             return hibernateConnection;
         }
 
-//        Properties properties = new Properties();
-//        properties.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/task_1_1_4");
-//        properties.setProperty("dialect", "org.hibernate.dialect.MySQL8Dialect");
-//        properties.setProperty("connection.driver_class", "com.mysql.cj.jdbc.Driver");
-//        properties.setProperty("connection.username", "root");
-//        properties.setProperty("connection.password", "root");
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/task_1_1_4");
+        properties.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+        properties.setProperty("hibernate.connection.username", "root");
+        properties.setProperty("hibernate.connection.password", "root");
 
         try {
-//            hibernateConnection = new Configuration()
-//                    .setProperties(properties)
-//                    .addAnnotatedClass(User.class)
-//                    .buildSessionFactory();
-
-            Configuration configuration = new Configuration().configure();
-//                    .addProperties(properties)
-                    configuration.addAnnotatedClass(User.class);
-            StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-            hibernateConnection = configuration.buildSessionFactory(builder.build());
+            hibernateConnection = new Configuration()
+                    .setProperties(properties)
+                    .addAnnotatedClass(User.class)
+                    .buildSessionFactory();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Не удалось установить соединение с базой данных");
